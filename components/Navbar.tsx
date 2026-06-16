@@ -11,7 +11,7 @@ export default async function Navbar() {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2 text-blue-600 font-bold text-xl tracking-tight">
             <GraduationCap className="w-8 h-8" />
-            <span>ExamSphere</span>
+            <span><span className="text-[#FFD700]">K</span>-MINTS Exam Portal</span>
           </Link>
           
           <div className="flex items-center space-x-6">
