@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Supabase PostgreSQL DB
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  STUDENT
+}
+
+enum QuestionType {
+  MCQ
+  CODING
+}
+
+model User {
+  id         String   @id @default(uuid())
+  fullName   String
+  email      String   @unique
+  phone      String
+  rollNumber String?
+  department String?
+  password   String
+  role       Role     @default(STUDENT)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  createdExams   Exam[]
+  results        Result[]
+  activityLogs   ActivityLog[]
+  studentAnswers StudentAnswer[]
+
+  @@index([email])
+}
+
+model Exam {
+  id              String    @id @default(uuid())
+  title           String
+  subject         String    @default("")
+  description     String    @default("")
+  durationMinutes Int
+  totalMarks      Int
+  passingMarks    Int       @default(0)
+  startDate       DateTime?
+  endDate         DateTime?
+  instructions    String    @default("")
+  published       Boolean   @default(false)
+  createdBy       String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  creator        User            @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  questions      Question[]
+  results        Result[]
+  studentAnswers StudentAnswer[]
+}
+
+model Question {
+  id            String       @id @default(uuid())
+  examId        String
+  type          QuestionType @default(MCQ)
+  text          String
+  options       Json? // e.g. {"A": "opts", "B": "opts", ...} (null for CODING)
+  correctOption String? // null for CODING
+  marks         Int
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  exam           Exam            @relation(fields: [examId], references: [id], onDelete: Cascade)
+  studentAnswers StudentAnswer[]
+
+  @@index([examId])
+}
+
+model Result {
+  id               String   @id @default(uuid())
+  studentId        String
+  examId           String
+  score            Float
+  totalMarks       Int
+  percentage       Float
+  status           String // 'PASS', 'FAIL', or 'PENDING_REVIEW'
+  correctAnswers   Int
+  wrongAnswers     Int
+  skippedQuestions Int
+  date             DateTime @default(now())
+
+  student User @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  exam    Exam @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([examId])
+}
+
+model StudentAnswer {
+  id             String   @id @default(uuid())
+  studentId      String
+  examId         String
+  questionId     String
+  selectedOption String? // for MCQ (null if skipped or coding)
+  codeAnswer     String? // for CODING (null if skipped or MCQ)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  student  User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  exam     Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, examId, questionId])
+  @@index([studentId])
+  @@index([examId])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String? // null if global
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model ActivityLog {
+  id        String   @id @default(uuid())
+  userId    String
+  action    String
+  details   String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
