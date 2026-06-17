@@ -255,30 +255,29 @@ export async function saveStudentAnswersDraft(examId: string, answerDrafts: Reco
   });
   if (submitted) return { error: 'Exam already submitted.' };
 
-  const ops = Object.entries(answerDrafts).map(([qId, ans]) => {
-    return prisma.studentAnswer.upsert({
+  const draftEntries = Object.entries(answerDrafts);
+  if (draftEntries.length === 0) return { success: true };
+
+  // Optimized: Use deleteMany + createMany instead of N upserts
+  // This reduces 50 queries down to just 2 queries, fixing the 60-second lag
+  await prisma.$transaction([
+    prisma.studentAnswer.deleteMany({
       where: {
-        studentId_examId_questionId: {
-          studentId: user.id,
-          examId,
-          questionId: qId,
-        }
-      },
-      update: {
-        selectedOption: ans.selectedOption || null,
-        codeAnswer: ans.codeAnswer || null,
-      },
-      create: {
+        studentId: user.id,
+        examId,
+      }
+    }),
+    prisma.studentAnswer.createMany({
+      data: draftEntries.map(([qId, ans]) => ({
         studentId: user.id,
         examId,
         questionId: qId,
         selectedOption: ans.selectedOption || null,
         codeAnswer: ans.codeAnswer || null,
-      }
-    });
-  });
+      }))
+    })
+  ]);
 
-  await prisma.$transaction(ops);
   return { success: true };
 }
 

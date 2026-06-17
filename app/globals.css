@@ -179,3 +179,99 @@ html {
   background: rgba(59, 130, 246, 0.2);
   color: inherit;
 }
+
+/* ===== Anti-Cheat: Exam Blur Overlay ===== */
+.exam-blurred {
+  filter: blur(25px) brightness(0.6);
+  pointer-events: none;
+  transition: filter 0.15s ease-out;
+}
+
+.exam-blur-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.exam-blur-overlay .blur-icon {
+  width: 64px;
+  height: 64px;
+  color: #f87171;
+  margin-bottom: 16px;
+  animation: pulse-ring 1.5s ease-in-out infinite;
+}
+
+.exam-blur-overlay h2 {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.exam-blur-overlay p {
+  color: #94a3b8;
+  font-size: 1rem;
+  text-align: center;
+  max-width: 400px;
+}
+
+/* ===== Anti-Cheat: Fullscreen Warning Modal ===== */
+.fullscreen-warning-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* ===== Anti-Cheat: Violation Warning Banner ===== */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.violation-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9998;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+.violation-banner.warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+}
+
+.violation-banner.danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+}
