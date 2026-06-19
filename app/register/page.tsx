@@ -121,10 +121,12 @@ export default function RegisterPage() {
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.15 }}
               >
-                <BookOpen className="w-12 h-12 text-purple-600 mx-auto mb-4" />
+                <div className="w-16 h-16 mx-auto mb-4">
+                  <img src="/ethnotech.png" alt="Ethnotech Academy Logo" className="w-full h-full object-contain" />
+                </div>
               </motion.div>
               <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Create your account</h2>
-              <p className="text-slate-500 mt-2">Join <span className="text-[#FFD700]">K</span>-MINTS Exam Portal and elevate your testing experience.</p>
+              <p className="text-slate-500 mt-2">Join Ethnotech Academy and elevate your testing experience.</p>
             </motion.div>
 
             <form onSubmit={handleSubmit} className="space-y-5">

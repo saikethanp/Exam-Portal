@@ -11,8 +11,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: 'K-MINTS Exam Portal | Production Ready Online Examination Portal',
-  description: 'A premium SaaS online examination portal featuring intelligent anti-cheat mechanisms, detailed analytics, and seamless exam management.',
+  title: 'ETHNOTECH | Intelligent Assessment Infrastructure',
+  description: 'Enterprise-grade assessment infrastructure designed for universities, institutions, training organizations, and modern education ecosystems. Powered by ETHNOTECH.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

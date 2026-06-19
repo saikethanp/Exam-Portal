@@ -59,10 +59,12 @@ export default function LoginPage() {
             animate={{ scale: 1, rotate: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.2 }}
           >
-            <BrainCircuit className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+            <div className="w-16 h-16 mx-auto mb-4">
+              <img src="/ethnotech.png" alt="Ethnotech Academy Logo" className="w-full h-full object-contain" />
+            </div>
           </motion.div>
           <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Welcome back</h2>
-          <p className="text-slate-500 mt-2">Log in to <span className="text-[#FFD700]">K</span>-MINTS Exam Portal to continue</p>
+          <p className="text-slate-500 mt-2">Log in to Ethnotech Academy to continue</p>
         </motion.div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

@@ -18,9 +18,9 @@ export default function AdminExamBuilder({ initialData }: { initialData?: any })
   const { showToast } = useToast();
 
   const [title, setTitle] = useState(initialData?.title || '');
-  const [durationMinutes, setDurationMinutes] = useState(initialData?.durationMinutes || 60);
-  const [mcqMarks, setMcqMarks] = useState(1);
-  const [codingMarks, setCodingMarks] = useState(10);
+  const [durationMinutes, setDurationMinutes] = useState<number | string>(initialData?.durationMinutes || 60);
+  const [mcqMarks, setMcqMarks] = useState<number | string>(1);
+  const [codingMarks, setCodingMarks] = useState<number | string>(10);
 
   const [questions, setQuestions] = useState<FormattedQuestion[]>(
     initialData?.questions?.length > 0
@@ -92,10 +92,13 @@ export default function AdminExamBuilder({ initialData }: { initialData?: any })
       // Use MARKS from the text if provided, otherwise use the default from the form
       const marksLine = lines.find(l => l.toUpperCase().startsWith('MARKS:'));
       let marks: number;
+      const defaultMcqMarks = typeof mcqMarks === 'number' ? mcqMarks : 1;
+      const defaultCodingMarks = typeof codingMarks === 'number' ? codingMarks : 10;
+      
       if (marksLine) {
-        marks = Number(marksLine.split(':')[1]?.trim()) || (type === 'MCQ' ? mcqMarks : codingMarks);
+        marks = Number(marksLine.split(':')[1]?.trim()) || (type === 'MCQ' ? defaultMcqMarks : defaultCodingMarks);
       } else {
-        marks = type === 'MCQ' ? mcqMarks : codingMarks;
+        marks = type === 'MCQ' ? defaultMcqMarks : defaultCodingMarks;
       }
 
       if (type === 'MCQ') {
@@ -235,9 +238,9 @@ export default function AdminExamBuilder({ initialData }: { initialData?: any })
               type="number"
               min="1"
               value={durationMinutes}
-              onChange={(e) => setDurationMinutes(Number(e.target.value))}
+              onChange={(e) => setDurationMinutes(e.target.value === '' ? '' : Number(e.target.value))}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition-all"
-              placeholder="60"
+              placeholder="e.g. 60"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -247,7 +250,7 @@ export default function AdminExamBuilder({ initialData }: { initialData?: any })
                 type="number"
                 min="1"
                 value={mcqMarks}
-                onChange={(e) => setMcqMarks(Number(e.target.value) || 1)}
+                onChange={(e) => setMcqMarks(e.target.value === '' ? '' : Number(e.target.value))}
                 className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition-all"
               />
             </div>
@@ -257,7 +260,7 @@ export default function AdminExamBuilder({ initialData }: { initialData?: any })
                 type="number"
                 min="1"
                 value={codingMarks}
-                onChange={(e) => setCodingMarks(Number(e.target.value) || 1)}
+                onChange={(e) => setCodingMarks(e.target.value === '' ? '' : Number(e.target.value))}
                 className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition-all"
               />
             </div>
@@ -481,7 +484,7 @@ export default function AdminExamBuilder({ initialData }: { initialData?: any })
           <div className="h-4 w-px bg-slate-200" />
           <div>
             <span className="text-slate-500 text-sm">Duration: </span>
-            <span className="font-bold text-slate-900">{durationMinutes} min</span>
+            <span className="font-bold text-slate-900">{durationMinutes || 0} min</span>
           </div>
         </div>
         <motion.button
