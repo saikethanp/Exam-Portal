@@ -172,7 +172,7 @@ export default function AdminExamBuilder({ initialData }: { initialData?: any })
       showToast('Please enter an exam title.', 'warning', 3000);
       return;
     }
-    if (!durationMinutes || durationMinutes < 1) {
+    if (!durationMinutes || Number(durationMinutes) < 1) {
       showToast('Duration must be at least 1 minute.', 'warning', 3000);
       return;
     }
